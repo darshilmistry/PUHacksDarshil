@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/AIThing.sol": {
+      "content": "//SPDX-License-Identifier:MIT\npragma solidity ^0.8.9;\n\n/**\n * @title AI imageGenerator storage Vessel\n * @author Darshil Mistry\n * @notice The contract is not tested\n */\ncontract AIThing {\n    /// @dev this mapping stores the image prompt and the ipfs image uri\n    struct Entries {\n        string prompt;\n        string image;\n    }\n\n    /// @dev mappings\n    mapping(address => mapping(uint32 => Entries)) private PromptLogs;\n    mapping(address => uint32) private UploadCount;\n    mapping(uint256 => address) private AuthorisedPersonnel;\n    uint8 private staffCount;\n\n    /// @dev the owner of cntract and the deploer can not bechanged\n    address private immutable i_owner;\n\n    ///@dev this guy allows only authorised guys to handle certain functions\n    modifier AuthorizedPersonneLOnly(uint8 userId) {\n        require(\n            AuthorisedPersonnel[userId] == msg.sender,\n            \"UnAuthorised, Access not granted\"\n        );\n        _;\n    }\n\n    constructor() {\n        i_owner = msg.sender;\n        staffCount = staffCount + 1;\n        AuthorisedPersonnel[staffCount] = msg.sender;\n    }\n\n    ///@dev this function would get the\n    function storemyPrompt(\n        string memory prompt,\n        string memory imageURI\n    ) public {\n        Entries memory newEntry = Entries(prompt, imageURI);\n        PromptLogs[msg.sender][UploadCount[msg.sender]] = newEntry;\n        UploadCount[msg.sender] += 1;\n    }\n\n    function getImages(\n        address genrator\n    ) public view returns (Entries[] memory) {\n        Entries[] memory history = new Entries[](UploadCount[msg.sender]);\n        for (uint32 i = 0; i < UploadCount[msg.sender]; i++) {\n            history[i] = PromptLogs[genrator][i];\n        }\n        return history;\n    }\n\n    function addPersonnel(\n        address newUser,\n        uint8 personnel\n    ) public AuthorizedPersonneLOnly(personnel) returns (uint8) {\n        staffCount = staffCount + 1;\n        AuthorisedPersonnel[staffCount] = newUser;\n        return (staffCount);\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
