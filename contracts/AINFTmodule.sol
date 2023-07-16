@@ -6,7 +6,7 @@ pragma solidity ^0.8.9;
  * @author Darshil Mistry
  * @notice The contract is not tested
  */
-contract AIThing {
+contract AINFTModule {
     /// @dev this mapping stores the image prompt and the ipfs image uri
     struct Entries {
         string prompt;
