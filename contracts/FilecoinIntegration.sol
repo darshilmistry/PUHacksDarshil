@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 /// @author idarshilmistry
 /// @notice This might be buggy
 
-contract UntitledContract {
+contract FileCoinIntegration {
     /// @dev Variables and mappings
 
     /// @dev the information we take from the uploder
